@@ -1,39 +1,8 @@
-import {ADD,EQUAL,SUB,DIV,RESET,MUL,UPDATE } from './calculatorTypes';
+import {EQUAL,RESET,UPDATE} from './calculatorTypes';
 
-export const equal = (content) => {
+export const equal = () => {
     return {
-        type: EQUAL,
-        payload: content
-    }
-}
-
-export const add = () => {
-    return {
-        type: ADD
-    }
-}
-
-export const sub = () => {
-    return {
-        type: SUB
-    }
-}
-
-export const div = () => {
-    return {
-        type: DIV
-    }
-}
-
-export const mul = () => {
-    return {
-        type: MUL
-    }
-}
-
-export const reset = () => {
-    return {
-        type: RESET
+        type: EQUAL
     }
 }
 
@@ -41,5 +10,11 @@ export const update = (content) => {
     return {
         type: UPDATE,
         payload: content
+    }
+}
+
+export const reset = () => {
+    return {
+        type: RESET
     }
 }

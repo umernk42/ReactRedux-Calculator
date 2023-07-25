@@ -1,20 +1,21 @@
-import { useState } from "react";
-import "./App.css";
+import { useEffect } from "react";
+import "./index.css";
 import Operand from "./components/Operand";
 import Operation from "./components/Operation";
-import { Provider } from "react-redux";
-import store from "./redux/store";
 import Display from "./components/Display";
 import Reset from "./components/Reset";
+import Equals from "./components/Equals";
+import {connect} from 'react-redux';
+import {update,equal,reset} from './redux/calculatorActions';
 
-function App() {
+function App(props) {
   const operandArray = [
     { id: "seven", value: "7" },
     { id: "eigth", value: "8" },
     { id: "nine", value: "9" },
     { id: "four", value: "4" },
-    { id: "six", value: "6" },
     { id: "five", value: "5" },
+    { id: "six", value: "6" },
     { id: "three", value: "3" },
     { id: "two", value: "2" },
     { id: "one", value: "1" },
@@ -25,29 +26,69 @@ function App() {
   const operationArray = [
     { id: "add", value: "+" },
     { id: "subtract", value: "-" },
-    { id: "multiply", value: "*" },
+    { id: "multiply", value: "X" },
     { id: "divide", value: "/" },
-    { id: "equals", value: "=" },
   ];
+
+
+
+  const handleKeyPress = (e) => {
+    const val = e.key;
+    const reqKeys = '123456789.+-/*';
+    if(reqKeys.includes(val)){
+      props.update(val);
+    }
+    else if(val === '=' || val === 'Enter'){
+      props.equal();  
+    }
+  };
+
+  useEffect(() => {
+    // Add the event listener when the component mounts
+    window.addEventListener('keypress', handleKeyPress);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+  }, [props.expression]); // The empty dependency array ensures the effect runs only once
 
   return (
     <>
-      <Provider store={store}>
-        <div className="calculator">
-          <Display />
-          {operandArray.map((item) => {
-            return <Operand key={item.id} id={item.id} num={item.value} />;
-          })}
+      <div className="calculator">
+        <Display />
+
+        <div className="btns">
           {operationArray.map((item) => {
-            return <Operation key={item.id} id={item.id} opr={item.value} />;
+            return (
+              <Operation
+                key={item.id}
+                id={item.id}
+                opr={item.value}
+              />
+            );
+          })}
+
+          {operandArray.map((item) => {
+            return (
+              <Operand
+                key={item.id}
+                id={item.id}
+                num={item.value}
+              />
+            );
           })}
           <Reset />
+          <Equals />
         </div>
-      </Provider>
+      </div>
     </>
   );
-}
+};
 
+const mapDispatchToProps = (dispatch) => ({
+   equal: () => dispatch(equal()),
+   update: (content) => dispatch(update(content))
+});
 
-
-export default App;
+export default connect(null,mapDispatchToProps)(App);

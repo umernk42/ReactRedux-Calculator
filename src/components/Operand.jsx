@@ -1,29 +1,22 @@
 import React from "react";
 import { connect } from "react-redux";
-import { update } from "../redux/calculatorActions";
+import {update} from '../redux/calculatorActions'
 
 function Operand(props) {
+  const handleClick = (e) => {
+    const val = e.target.textContent; 
+    props.update(val);
+  };
 
   return (
-    <button onClick={() => props.update(props.num)} id={props.id} className="btn btn-operand">
-        {props.num}
+    <button id={props.id} className="btn btn-operand" onClick={handleClick}>
+      {props.num}
     </button>
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    ...state
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  update: (content) => dispatch(update(content))
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    update: (content) => dispatch(update(content))
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Operand);
+export default connect(null, mapDispatchToProps)(Operand);
